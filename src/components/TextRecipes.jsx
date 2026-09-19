@@ -8,6 +8,7 @@ export default function TextRecipes({ db, update }) {
   const favs = new Set(db.favRecipes)
 
   const filtered = tag === 'Todas' ? RECIPES : RECIPES.filter((r) => r.tag === tag)
+  const displayed = tag === 'Favoritas' ? RECIPES.filter((r) => favs.has(r.id)) : filtered
 
   function toggleFav(id, e) {
     e?.stopPropagation()
@@ -19,6 +20,11 @@ export default function TextRecipes({ db, update }) {
 
   if (open) {
     const r = open
+    const idx = displayed.findIndex((x) => x.id === r.id)
+    function goTo(i) {
+      setOpen(displayed[i])
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
     return (
       <div className="page">
         <button className="btn ghost" onClick={() => setOpen(null)}>
@@ -61,6 +67,17 @@ export default function TextRecipes({ db, update }) {
               <p>{r.tip}</p>
             </div>
           )}
+          {idx >= 0 && (
+            <div className="yt-nav">
+              <button className="btn ghost sm" disabled={idx <= 0} onClick={() => goTo(idx - 1)}>
+                <Icon name="arrow-left" size={15} /> Anterior
+              </button>
+              <span className="yt-nav-pos">{idx + 1} / {displayed.length}</span>
+              <button className="btn ghost sm" disabled={idx >= displayed.length - 1} onClick={() => goTo(idx + 1)}>
+                Próximo <Icon name="chevron" size={15} />
+              </button>
+            </div>
+          )}
         </article>
       </div>
     )
@@ -85,7 +102,7 @@ export default function TextRecipes({ db, update }) {
       </div>
 
       <div className="recipe-grid">
-        {(tag === 'Favoritas' ? RECIPES.filter((r) => favs.has(r.id)) : filtered).map((r) => (
+        {displayed.map((r) => (
           <button key={r.id} className="recipe-card card" style={{ '--c': r.color }} onClick={() => setOpen(r)}>
             <img className="lesson-thumb" src={r.img} alt="" loading="lazy" />
             <div className="lesson-top">

@@ -19,6 +19,11 @@ export default function TextLessons({ db, update }) {
 
   if (open) {
     const l = open
+    const idx = LESSONS.findIndex((x) => x.id === l.id)
+    function goTo(i) {
+      setOpen(LESSONS[i])
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
     return (
       <div className="page">
         <button className="btn ghost" onClick={() => setOpen(null)}>
@@ -52,6 +57,15 @@ export default function TextLessons({ db, update }) {
               </ul>
             </div>
           )}
+          <div className="yt-nav">
+            <button className="btn ghost sm" disabled={idx <= 0} onClick={() => goTo(idx - 1)}>
+              <Icon name="arrow-left" size={15} /> Anterior
+            </button>
+            <span className="yt-nav-pos">{idx + 1} / {LESSONS.length}</span>
+            <button className="btn ghost sm" disabled={idx >= LESSONS.length - 1} onClick={() => goTo(idx + 1)}>
+              Próximo <Icon name="chevron" size={15} />
+            </button>
+          </div>
         </article>
       </div>
     )
