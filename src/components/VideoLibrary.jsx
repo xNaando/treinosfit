@@ -82,7 +82,7 @@ export default function VideoLibrary({ title, subtitle, playlists, custom, onRem
             pl={pl}
             meta={metas[pl.id]}
             accent={accent}
-            onOpen={setOpen}
+            onOpen={(pl) => { setOpen(pl); window.scrollTo(0, 0) }}
             onRemove={onRemove}
           />
         ))}

@@ -103,7 +103,7 @@ export default function TextRecipes({ db, update }) {
 
       <div className="recipe-grid">
         {displayed.map((r) => (
-          <button key={r.id} className="recipe-card card" style={{ '--c': r.color }} onClick={() => setOpen(r)}>
+          <button key={r.id} className="recipe-card card" style={{ '--c': r.color }} onClick={() => { setOpen(r); window.scrollTo(0, 0) }}>
             <img className="lesson-thumb" src={r.img} alt="" loading="lazy" />
             <div className="lesson-top">
               <span className="pl-tag" style={{ background: r.color }}>{r.tag}</span>

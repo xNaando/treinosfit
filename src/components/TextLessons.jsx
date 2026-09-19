@@ -84,7 +84,7 @@ export default function TextLessons({ db, update }) {
 
       <div className="lesson-grid">
         {LESSONS.map((l) => (
-          <button key={l.id} className="lesson-card card" style={{ '--c': l.color }} onClick={() => setOpen(l)}>
+          <button key={l.id} className="lesson-card card" style={{ '--c': l.color }} onClick={() => { setOpen(l); window.scrollTo(0, 0) }}>
             <img className="lesson-thumb" src={l.img} alt="" loading="lazy" />
             <div className="lesson-top">
               <span className="pl-tag" style={{ background: l.color }}>{l.tag}</span>

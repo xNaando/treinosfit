@@ -117,12 +117,16 @@ input, select { font-family: inherit; }
   backdrop-filter: blur(14px);
   border-top: 1px solid var(--line);
   padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
-  justify-content: space-around;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
+.bottomnav::-webkit-scrollbar { display: none; }
 .bnav-btn {
   display: flex; flex-direction: column; align-items: center; gap: 2px;
   border: 0; background: none; color: var(--muted);
-  font-size: 0.62rem; font-weight: 800; padding: 6px 8px; border-radius: 12px;
+  font-size: 0.62rem; font-weight: 800; padding: 6px 10px; border-radius: 12px;
+  flex: 1 0 auto;
 }
 .bnav-btn.active { color: #7c3aed; }
 
