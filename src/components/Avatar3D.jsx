@@ -43,16 +43,17 @@ const HEAD_R = 0.26
 // ---------- cabelo ----------
 function Hair({ style, color }) {
   const mat = <meshStandardMaterial color={color} roughness={0.7} />
-  const cap = (r = HEAD_R + 0.012, sy = 0.72, y = 0.07) => (
+  // capa só no topo da cabeça (theta limitado) — não cobre o rosto
+  const cap = (r = HEAD_R + 0.012, sy = 0.72, y = 0.07, theta = Math.PI * 0.45) => (
     <mesh position={[0, y, 0]} scale={[1, sy, 1]}>
-      <sphereGeometry args={[r, 26, 20]} />
+      <sphereGeometry args={[r, 26, 20, 0, Math.PI * 2, 0, theta]} />
       {mat}
     </mesh>
   )
-  // franja feminina
+  // franja: faixa curva só na testa (linha do cabelo)
   const bangs = (
-    <mesh position={[0, 0.15, 0.02]} scale={[0.97, 0.45, 0.97]} rotation={[-0.15, 0, 0]}>
-      <sphereGeometry args={[HEAD_R + 0.015, 24, 16]} />
+    <mesh position={[0, 0.02, 0]} scale={[1, 0.8, 1]}>
+      <sphereGeometry args={[HEAD_R + 0.018, 24, 16, Math.PI * 0.15, Math.PI * 0.7, Math.PI * 0.18, Math.PI * 0.22]} />
       {mat}
     </mesh>
   )
@@ -67,7 +68,7 @@ function Hair({ style, color }) {
       return (
         <>
           {cap()}
-          <mesh position={[0, 0.16, 0.19]} rotation={[-0.5, 0, 0]} scale={[1, 0.5, 0.6]}>
+          <mesh position={[0, 0.18, 0.17]} rotation={[-0.5, 0, 0]} scale={[1, 0.45, 0.55]}>
             <sphereGeometry args={[0.14, 16, 12]} />
             {mat}
           </mesh>
@@ -115,7 +116,7 @@ function Hair({ style, color }) {
       return (
         <>
           <mesh position={[0, 0.11, 0]} scale={[1.04, 0.58, 1.04]}>
-            <sphereGeometry args={[HEAD_R + 0.012, 26, 20]} />
+            <sphereGeometry args={[HEAD_R + 0.012, 26, 20, 0, Math.PI * 2, 0, Math.PI * 0.42]} />
             {mat}
           </mesh>
           {/* aba inclinada para baixo */}
@@ -445,9 +446,14 @@ function Stage() {
 }
 
 export default function Avatar3D({ heightCm = 170, weightKg = 70, avatar, sex = 'M', interactive = true, style }) {
+  const hF = heightFactor(heightCm)
+  // câmera afasta e mira mais alto conforme o avatar cresce — nunca corta a cabeça
+  const camZ = Math.max(3.1, 3.15 * hF)
+  const targetY = 0.92 + Math.max(0, hF - 1) * 0.55
+
   return (
     <div style={{ width: '100%', height: '100%', ...style }}>
-      <Canvas camera={{ position: [0, 1.3, 3.1], fov: 38 }} dpr={[1, 2]}>
+      <Canvas camera={{ position: [0, 1.3, camZ], fov: 38 }} dpr={[1, 2]}>
         <ambientLight intensity={0.9} />
         <hemisphereLight args={['#fff7ed', '#c4b5fd', 0.5]} />
         <directionalLight position={[3, 4, 2.5]} intensity={1.2} />
@@ -459,7 +465,7 @@ export default function Avatar3D({ heightCm = 170, weightKg = 70, avatar, sex = 
           enabled={interactive}
           enableZoom={false}
           enablePan={false}
-          target={[0, 0.92, 0]}
+          target={[0, targetY, 0]}
           minPolarAngle={Math.PI * 0.28}
           maxPolarAngle={Math.PI * 0.62}
         />
