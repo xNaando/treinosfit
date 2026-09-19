@@ -26,6 +26,13 @@ const NAV = [
 export default function App() {
   const [db, update] = useDb()
   const [tab, setTab] = useState('inicio')
+  const [tick, setTick] = useState(0) // remonta a tela ao clicar no menu da aba atual
+
+  function go(id) {
+    if (id === tab) setTick((t) => t + 1)
+    setTab(id)
+    window.scrollTo(0, 0)
+  }
 
   // galeria de desenvolvimento: ?dev=avatars
   if (new URLSearchParams(window.location.search).get('dev') === 'avatars') {
@@ -45,13 +52,13 @@ export default function App() {
   return (
     <div className="app">
       <header className="topbar">
-        <div className="brand" onClick={() => setTab('inicio')}>
+        <div className="brand" onClick={() => go('inicio')}>
           <span className="brand-mark"><Icon name="dumbbell" size={18} /></span>
           <span>Treinos <em>Fit</em></span>
         </div>
         <nav className="nav">
           {NAV.map((n) => (
-            <button key={n.id} className={`nav-btn ${tab === n.id ? 'active' : ''}`} onClick={() => setTab(n.id)}>
+            <button key={n.id} className={`nav-btn ${tab === n.id ? 'active' : ''}`} onClick={() => go(n.id)}>
               <Icon name={n.icon} size={17} />
               <span>{n.label}</span>
             </button>
@@ -59,8 +66,8 @@ export default function App() {
         </nav>
       </header>
 
-      <main className="main">
-        {tab === 'inicio' && <Dashboard db={db} update={update} go={setTab} />}
+      <main className="main" key={`${tab}:${tick}`}>
+        {tab === 'inicio' && <Dashboard db={db} update={update} go={go} />}
         {tab === 'aulas-video' && (
           <VideoLibrary
             title="Treinos em vídeo"
@@ -90,7 +97,7 @@ export default function App() {
 
       <nav className="bottomnav">
         {NAV.map((n) => (
-          <button key={n.id} className={`bnav-btn ${tab === n.id ? 'active' : ''}`} onClick={() => setTab(n.id)}>
+          <button key={n.id} className={`bnav-btn ${tab === n.id ? 'active' : ''}`} onClick={() => go(n.id)}>
             <Icon name={n.icon} size={20} />
             <span>{n.label.split(' ')[0]}</span>
           </button>
