@@ -1,0 +1,150 @@
+// Integração com a YouTube Data API v3 (mesma chave do projeto pilates).
+// Tudo roda no client; resultados ficam em cache no localStorage pra economizar quota.
+
+const API_KEY = 'AIzaSyBhifKyMeGe8aJu5FaQHvpNEgduN_JSGM0'
+const BASE = 'https://www.googleapis.com/youtube/v3'
+
+const META_TTL = 7 * 24 * 3600 * 1000 // metadados de playlist/vídeo: 7 dias
+const ITEMS_TTL = 6 * 3600 * 1000 // itens da playlist: 6 horas
+
+function cacheGet(key, ttl) {
+  try {
+    const raw = localStorage.getItem(key)
+    if (!raw) return null
+    const { ts, data } = JSON.parse(raw)
+    if (Date.now() - ts > ttl) return null
+    return data
+  } catch {
+    return null
+  }
+}
+
+function cacheSet(key, data) {
+  try {
+    localStorage.setItem(key, JSON.stringify({ ts: Date.now(), data }))
+  } catch {
+    // cache cheio: ignora
+  }
+}
+
+function bestThumb(thumbnails) {
+  return (
+    thumbnails?.maxres?.url ||
+    thumbnails?.standard?.url ||
+    thumbnails?.high?.url ||
+    thumbnails?.medium?.url ||
+    thumbnails?.default?.url ||
+    null
+  )
+}
+
+async function ytGet(path) {
+  const r = await fetch(`${BASE}${path}${path.includes('?') ? '&' : '?'}key=${API_KEY}`)
+  if (!r.ok) throw new Error(`YouTube API ${r.status}`)
+  return r.json()
+}
+
+// título, descrição, canal e capa de uma playlist ou vídeo
+export async function fetchItemMeta(item) {
+  const cached = cacheGet(`yt_meta_${item.kind}_${item.id}`, META_TTL)
+  if (cached) return cached
+
+  let meta = null
+  try {
+    if (item.kind === 'playlist') {
+      const d = await ytGet(`/playlists?part=snippet&id=${item.id}`)
+      const s = d.items?.[0]?.snippet
+      if (s) {
+        meta = {
+          title: s.title,
+          description: s.description || '',
+          channel: s.channelTitle,
+          thumb: bestThumb(s.thumbnails),
+        }
+      }
+    } else {
+      const d = await ytGet(`/videos?part=snippet&id=${item.id}`)
+      const s = d.items?.[0]?.snippet
+      if (s) {
+        meta = {
+          title: s.title,
+          description: s.description || '',
+          channel: s.channelTitle,
+          thumb: bestThumb(s.thumbnails),
+        }
+      }
+    }
+  } catch {
+    return null
+  }
+
+  if (meta) cacheSet(`yt_meta_${item.kind}_${item.id}`, meta)
+  return meta
+}
+
+// remove vídeos ocultos, privados, deletados ou bloqueados para embed
+function isVisibleItem(item) {
+  const s = item.snippet
+  if (!s?.resourceId?.videoId) return false
+  const t = (s.title || '').toLowerCase()
+  if (!t || t.includes('private') || t.includes('deleted') || t.includes('privado')) return false
+  if (!s.thumbnails?.default) return false
+  if (item.status && item.status.privacyStatus !== 'public') return false
+  return true
+}
+
+// checa no lote se o vídeo pode ser embedado e não é bloqueado no BR
+async function filterEmbeddable(items) {
+  const ids = items.map((i) => i.snippet.resourceId.videoId)
+  const ok = new Set()
+  for (let i = 0; i < ids.length; i += 50) {
+    try {
+      const d = await ytGet(`/videos?part=status,contentDetails&id=${ids.slice(i, i + 50).join(',')}`)
+      for (const v of d.items || []) {
+        const blocked = v.contentDetails?.regionRestriction?.blocked || []
+        if (v.status?.embeddable && v.status?.privacyStatus === 'public' && !blocked.includes('BR')) {
+          ok.add(v.id)
+        }
+      }
+    } catch {
+      // se a checagem falhar, mantém o que já passou no filtro do snippet
+      ids.slice(i, i + 50).forEach((id) => ok.add(id))
+    }
+  }
+  return items.filter((i) => ok.has(i.snippet.resourceId.videoId))
+}
+
+// todos os vídeos de uma playlist (paginado, filtrado)
+export async function fetchPlaylistVideos(playlistId) {
+  const cached = cacheGet(`yt_items_${playlistId}`, ITEMS_TTL)
+  if (cached) return cached
+
+  const items = []
+  let pageToken = ''
+  do {
+    const d = await ytGet(
+      `/playlistItems?part=snippet,status&maxResults=50&playlistId=${playlistId}` +
+        (pageToken ? `&pageToken=${pageToken}` : '')
+    )
+    if (d.error) throw new Error(d.error.message)
+    items.push(...(d.items || []))
+    pageToken = d.nextPageToken || ''
+  } while (pageToken)
+
+  const visible = await filterEmbeddable(items.filter(isVisibleItem))
+  const videos = visible.map((i) => ({
+    id: i.snippet.resourceId.videoId,
+    title: i.snippet.title,
+    description: i.snippet.description || '',
+    channel: i.snippet.videoOwnerChannelTitle || i.snippet.channelTitle,
+    thumb: bestThumb(i.snippet.thumbnails) || `https://img.youtube.com/vi/${i.snippet.resourceId.videoId}/hqdefault.jpg`,
+    position: i.snippet.position,
+  }))
+
+  cacheSet(`yt_items_${playlistId}`, videos)
+  return videos
+}
+
+export function videoEmbedUrl(videoId) {
+  return `https://www.youtube.com/embed/${videoId}?rel=0`
+}

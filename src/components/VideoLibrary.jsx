@@ -1,10 +1,57 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Icon from './Icon'
-import { parseYouTube, ytEmbedUrl } from '../utils'
+import PlaylistView from './PlaylistView'
+import { parseYouTube } from '../utils'
+import { fetchItemMeta } from '../youtube'
+
+// Card de playlist/vídeo: capa, título e canal vêm do YouTube
+function PlaylistCard({ pl, accent, onOpen, onRemove }) {
+  const [meta, setMeta] = useState(null)
+
+  useEffect(() => {
+    let alive = true
+    fetchItemMeta(pl).then((m) => alive && m && setMeta(m))
+    return () => {
+      alive = false
+    }
+  }, [pl.id, pl.kind])
+
+  const thumb =
+    meta?.thumb || (pl.kind === 'video' ? `https://img.youtube.com/vi/${pl.id}/hqdefault.jpg` : null)
+
+  return (
+    <button className="pl-card card" onClick={() => onOpen(pl)} style={{ '--c': pl.color || accent }}>
+      <div className="pl-thumb">
+        {thumb ? <img src={thumb} alt="" loading="lazy" /> : null}
+        <span className="pl-play"><Icon name="play" size={26} /></span>
+      </div>
+      <div className="pl-info">
+        <strong>{meta?.title || pl.title}</strong>
+        <span className="muted">{meta?.channel || pl.channel}</span>
+        <div className="pl-foot">
+          <span className="pl-tag">{pl.tag}</span>
+          <span className="muted">{pl.kind === 'playlist' ? 'Playlist' : 'Vídeo'}</span>
+        </div>
+      </div>
+      {pl.tag === 'Minhas' && (
+        <span
+          className="pl-del"
+          role="button"
+          tabIndex={0}
+          aria-label="Remover"
+          onClick={(e) => { e.stopPropagation(); onRemove(pl.id, pl.kind) }}
+          onKeyDown={(e) => e.key === 'Enter' && (e.stopPropagation(), onRemove(pl.id, pl.kind))}
+        >
+          <Icon name="trash" size={15} />
+        </span>
+      )}
+    </button>
+  )
+}
 
 // Biblioteca de playlists/vídeos do YouTube — usada em "Aulas em vídeo" e "Receitas em vídeo"
 export default function VideoLibrary({ title, subtitle, playlists, custom, onAdd, onRemove, accent = '#8b5cf6' }) {
-  const [open, setOpen] = useState(null) // item aberto no player
+  const [open, setOpen] = useState(null) // item aberto na tela de vídeos
   const [url, setUrl] = useState('')
   const [customTitle, setCustomTitle] = useState('')
   const [error, setError] = useState('')
@@ -24,6 +71,10 @@ export default function VideoLibrary({ title, subtitle, playlists, custom, onAdd
     setUrl('')
     setCustomTitle('')
     setError('')
+  }
+
+  if (open) {
+    return <PlaylistView item={open} onBack={() => setOpen(null)} accent={accent} />
   }
 
   return (
@@ -57,55 +108,15 @@ export default function VideoLibrary({ title, subtitle, playlists, custom, onAdd
         ))}
       </div>
 
-      {open && (
-        <div className="player-wrap card">
-          <div className="player-head">
-            <div>
-              <h3>{open.title}</h3>
-              <span className="muted">{open.channel}{open.kind === 'playlist' ? ' · playlist' : ' · vídeo'}</span>
-            </div>
-            <button className="icon-btn" onClick={() => setOpen(null)} aria-label="Fechar player">
-              <Icon name="x" size={18} />
-            </button>
-          </div>
-          <div className="player-frame">
-            <iframe
-              src={ytEmbedUrl(open)}
-              title={open.title}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          </div>
-        </div>
-      )}
-
       <div className="pl-grid">
         {filtered.map((pl, i) => (
-          <button key={`${pl.id}-${i}`} className="pl-card card" onClick={() => setOpen(pl)} style={{ '--c': pl.color || accent }}>
-            <div className="pl-thumb">
-              <Icon name="play" size={30} />
-            </div>
-            <div className="pl-info">
-              <strong>{pl.title}</strong>
-              <span className="muted">{pl.channel}</span>
-              <div className="pl-foot">
-                <span className="pl-tag">{pl.tag}</span>
-                <span className="muted">{pl.kind === 'playlist' ? 'Playlist' : 'Vídeo'}</span>
-              </div>
-            </div>
-            {pl.tag === 'Minhas' && (
-              <span
-                className="pl-del"
-                role="button"
-                tabIndex={0}
-                aria-label="Remover"
-                onClick={(e) => { e.stopPropagation(); onRemove(pl.id, pl.kind) }}
-                onKeyDown={(e) => e.key === 'Enter' && (e.stopPropagation(), onRemove(pl.id, pl.kind))}
-              >
-                <Icon name="trash" size={15} />
-              </span>
-            )}
-          </button>
+          <PlaylistCard
+            key={`${pl.id}-${i}`}
+            pl={pl}
+            accent={accent}
+            onOpen={setOpen}
+            onRemove={onRemove}
+          />
         ))}
       </div>
     </div>

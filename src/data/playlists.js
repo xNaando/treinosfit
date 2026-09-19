@@ -78,6 +78,14 @@ export const LESSON_PLAYLISTS = [
 
 export const RECIPE_PLAYLISTS = [
   {
+    id: 'PLODDsFqV618Mb31owsZiVE2SRwlSPB_aG',
+    kind: 'playlist',
+    title: 'Receitas Fáceis e Saudáveis',
+    channel: 'Betto Auge',
+    tag: 'Saudáveis',
+    color: '#e11d48',
+  },
+  {
     id: 'PLm5V5aj1twjx3gKBmlwzfC3wbFeipRkTl',
     kind: 'playlist',
     title: 'Cozinha Encantada',
