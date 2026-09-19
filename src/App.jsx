@@ -13,8 +13,8 @@ import { LESSON_PLAYLISTS, RECIPE_PLAYLISTS } from './data/playlists'
 
 const NAV = [
   { id: 'inicio', label: 'Início', icon: 'home' },
-  { id: 'aulas-video', label: 'Aulas em vídeo', icon: 'video' },
-  { id: 'aulas-texto', label: 'Aulas em texto', icon: 'book' },
+  { id: 'aulas-video', label: 'Treinos em vídeo', icon: 'video' },
+  { id: 'aulas-texto', label: 'Treinos em texto', icon: 'book' },
   { id: 'receitas-video', label: 'Receitas em vídeo', icon: 'utensils' },
   { id: 'receitas-texto', label: 'Receitas em texto', icon: 'heart' },
   { id: 'progresso', label: 'Progresso', icon: 'chart' },
@@ -33,12 +33,6 @@ export default function App() {
   if (!db.profile) {
     return <Onboarding onDone={update} />
   }
-
-  const addCustom = (section) => (item) =>
-    update((d) => {
-      d.customPlaylists[section].push(item)
-      return d
-    })
 
   const removeCustom = (section) => (id, kind) =>
     update((d) => {
@@ -67,11 +61,10 @@ export default function App() {
         {tab === 'inicio' && <Dashboard db={db} update={update} go={setTab} />}
         {tab === 'aulas-video' && (
           <VideoLibrary
-            title="Aulas em vídeo"
-            subtitle="Playlists públicas do YouTube para treinar em casa — escolha uma e aperte o play."
+            title="Treinos em vídeo"
+            subtitle="Playlists do YouTube escolhidas a dedo pra você treinar em casa — yoga, HIIT, dança e força. Escolha uma e dê o play."
             playlists={LESSON_PLAYLISTS}
             custom={db.customPlaylists.lessons}
-            onAdd={addCustom('lessons')}
             onRemove={removeCustom('lessons')}
             accent="#8b5cf6"
           />
@@ -80,10 +73,9 @@ export default function App() {
         {tab === 'receitas-video' && (
           <VideoLibrary
             title="Receitas em vídeo"
-            subtitle="Playlists públicas de culinária para variar o cardápio sem sair da dieta."
+            subtitle="Playlists de receitas do YouTube pra variar o cardápio: pratos saudáveis, práticos e gostosos. Escolha uma e dê o play."
             playlists={RECIPE_PLAYLISTS}
             custom={db.customPlaylists.recipes}
-            onAdd={addCustom('recipes')}
             onRemove={removeCustom('recipes')}
             accent="#f59e0b"
           />

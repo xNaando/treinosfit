@@ -69,7 +69,7 @@ export default function TextRecipes({ db, update }) {
     <div className="page">
       <header className="page-head">
         <h1>Receitas em texto</h1>
-        <p className="muted">Receitas saudáveis com macros estimados por porção.</p>
+        <p className="muted">Receitas saudáveis e fáceis de fazer, com calorias, proteínas, carboidratos e gorduras estimados por porção — pra encaixar na sua dieta sem complicação.</p>
       </header>
 
       <div className="chip-row">

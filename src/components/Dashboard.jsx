@@ -153,7 +153,7 @@ export default function Dashboard({ db, update, go }) {
             <p className="muted">Defina um peso-alvo para acompanhar seu progresso e ver projeções.</p>
           )}
           <div className="mini-links">
-            <button className="mini-link" onClick={() => go('aulas-video')}><Icon name="video" size={15} /> Aulas em vídeo</button>
+            <button className="mini-link" onClick={() => go('aulas-video')}><Icon name="video" size={15} /> Treinos em vídeo</button>
             <button className="mini-link" onClick={() => go('receitas-texto')}><Icon name="utensils" size={15} /> Receitas fit</button>
             <button className="mini-link" onClick={() => go('aulas-texto')}><Icon name="book" size={15} /> Planos de treino</button>
           </div>

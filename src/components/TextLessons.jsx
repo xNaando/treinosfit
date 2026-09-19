@@ -59,8 +59,8 @@ export default function TextLessons({ db, update }) {
   return (
     <div className="page">
       <header className="page-head">
-        <h1>Aulas em texto</h1>
-        <p className="muted">Guias de treino escritos por mim para você seguir no seu ritmo.</p>
+        <h1>Treinos em texto</h1>
+        <p className="muted">Treinos completos em texto: aquecimento, exercícios passo a passo e dicas — tudo no seu ritmo, sem precisar de vídeo.</p>
         <div className="progress slim">
           <div className="progress-fill" style={{ width: `${pct}%` }} />
         </div>
