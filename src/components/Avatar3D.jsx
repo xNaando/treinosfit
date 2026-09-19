@@ -1,6 +1,6 @@
-import { useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import * as THREE from 'three'
-import { Canvas, useFrame } from '@react-three/fiber'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 import { fatFactor, heightFactor } from '../utils'
 
@@ -430,6 +430,26 @@ export function Character({ heightCm, weightKg, avatar, sex }) {
   )
 }
 
+// ajusta a câmera conforme a altura do avatar (roda dentro do Canvas)
+function CameraRig({ hF }) {
+  const camera = useThree((s) => s.camera)
+  const controls = useThree((s) => s.controls)
+
+  useEffect(() => {
+    const z = Math.max(3.1, 3.3 * hF)
+    const ty = 0.92 + Math.max(0, hF - 1) * 0.6
+    camera.position.set(0, 1.3, z)
+    camera.lookAt(0, ty, 0)
+    camera.updateProjectionMatrix()
+    if (controls) {
+      controls.target.set(0, ty, 0)
+      controls.update()
+    }
+  }, [hF, camera, controls])
+
+  return null
+}
+
 function Stage() {
   return (
     <>
@@ -447,13 +467,10 @@ function Stage() {
 
 export default function Avatar3D({ heightCm = 170, weightKg = 70, avatar, sex = 'M', interactive = true, style }) {
   const hF = heightFactor(heightCm)
-  // câmera afasta e mira mais alto conforme o avatar cresce — nunca corta a cabeça
-  const camZ = Math.max(3.1, 3.15 * hF)
-  const targetY = 0.92 + Math.max(0, hF - 1) * 0.55
 
   return (
     <div style={{ width: '100%', height: '100%', ...style }}>
-      <Canvas camera={{ position: [0, 1.3, camZ], fov: 38 }} dpr={[1, 2]}>
+      <Canvas camera={{ position: [0, 1.3, 3.1], fov: 38 }} dpr={[1, 2]}>
         <ambientLight intensity={0.9} />
         <hemisphereLight args={['#fff7ed', '#c4b5fd', 0.5]} />
         <directionalLight position={[3, 4, 2.5]} intensity={1.2} />
@@ -461,11 +478,12 @@ export default function Avatar3D({ heightCm = 170, weightKg = 70, avatar, sex = 
         <pointLight position={[3, 1.4, -2]} intensity={9} color="#38bdf8" />
         <Stage />
         <Character heightCm={heightCm} weightKg={weightKg} avatar={avatar} sex={sex} />
+        <CameraRig hF={hF} />
         <OrbitControls
           enabled={interactive}
           enableZoom={false}
           enablePan={false}
-          target={[0, targetY, 0]}
+          makeDefault
           minPolarAngle={Math.PI * 0.28}
           maxPolarAngle={Math.PI * 0.62}
         />
