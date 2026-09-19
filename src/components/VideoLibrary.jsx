@@ -1,19 +1,10 @@
 import { useEffect, useState } from 'react'
 import Icon from './Icon'
 import PlaylistView from './PlaylistView'
-import { fetchItemMeta } from '../youtube'
+import { fetchItemsMeta } from '../youtube'
 
 // Card de playlist/vídeo: capa, título e canal vêm do YouTube
-function PlaylistCard({ pl, accent, onOpen, onRemove }) {
-  const [meta, setMeta] = useState(null)
-
-  useEffect(() => {
-    let alive = true
-    fetchItemMeta(pl).then((m) => alive && m && setMeta(m))
-    return () => {
-      alive = false
-    }
-  }, [pl.id, pl.kind])
+function PlaylistCard({ pl, meta, accent, onOpen, onRemove }) {
 
   const thumb =
     meta?.thumb || (pl.kind === 'video' ? `https://img.youtube.com/vi/${pl.id}/hqdefault.jpg` : null)
@@ -51,10 +42,21 @@ function PlaylistCard({ pl, accent, onOpen, onRemove }) {
 export default function VideoLibrary({ title, subtitle, playlists, custom, onRemove, accent = '#8b5cf6' }) {
   const [open, setOpen] = useState(null) // item aberto na tela de vídeos
   const [tag, setTag] = useState('Todas')
+  const [metas, setMetas] = useState({})
 
   const tags = ['Todas', ...new Set(playlists.map((p) => p.tag))]
   const all = [...playlists, ...(custom || []).map((c) => ({ ...c, tag: 'Minhas', color: '#f43f5e', channel: 'Você adicionou' }))]
   const filtered = tag === 'Todas' ? all : all.filter((p) => p.tag === tag)
+
+  // busca metas de todos os itens em lotes (com cache)
+  useEffect(() => {
+    let alive = true
+    fetchItemsMeta(all).then((m) => alive && setMetas(m))
+    return () => {
+      alive = false
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playlists])
 
   if (open) {
     return <PlaylistView item={open} onBack={() => setOpen(null)} accent={accent} />
@@ -78,6 +80,7 @@ export default function VideoLibrary({ title, subtitle, playlists, custom, onRem
           <PlaylistCard
             key={`${pl.id}-${i}`}
             pl={pl}
+            meta={metas[pl.id]}
             accent={accent}
             onOpen={setOpen}
             onRemove={onRemove}

@@ -44,6 +44,48 @@ async function ytGet(path) {
   return r.json()
 }
 
+// busca metas de vários itens de uma vez (lotes de 50) — usa cache por id
+export async function fetchItemsMeta(items) {
+  const result = {}
+  const missing = []
+  for (const item of items) {
+    const key = `yt_meta_${item.kind}_${item.id}`
+    const cached = cacheGet(key, META_TTL)
+    if (cached) result[item.id] = cached
+    else missing.push(item)
+  }
+  if (!missing.length) return result
+
+  const playlists = missing.filter((i) => i.kind === 'playlist').map((i) => i.id)
+  const videos = missing.filter((i) => i.kind === 'video').map((i) => i.id)
+
+  const fetchBatch = async (kind, ids) => {
+    for (let i = 0; i < ids.length; i += 50) {
+      try {
+        const d = await ytGet(`/${kind}s?part=snippet&id=${ids.slice(i, i + 50).join(',')}`)
+        for (const it of d.items || []) {
+          const m = {
+            title: it.snippet.title,
+            description: it.snippet.description || '',
+            channel: it.snippet.channelTitle,
+            thumb: bestThumb(it.snippet.thumbnails),
+          }
+          result[it.id] = m
+          cacheSet(`yt_meta_${kind}_${it.id}`, m)
+        }
+      } catch {
+        // falha no lote: cards caem no fallback (título estático)
+      }
+    }
+  }
+
+  await Promise.all([
+    fetchBatch('playlist', playlists),
+    fetchBatch('video', videos),
+  ])
+  return result
+}
+
 // título, descrição, canal e capa de uma playlist ou vídeo
 export async function fetchItemMeta(item) {
   const cached = cacheGet(`yt_meta_${item.kind}_${item.id}`, META_TTL)
