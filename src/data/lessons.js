@@ -1,6 +1,14 @@
+import imgAquecimento from '../assets/img/lessons/aquecimento.jpg'
+import imgHiit from '../assets/img/lessons/hiit-iniciante.jpg'
+import imgForca from '../assets/img/lessons/forca-sem-equipamento.jpg'
+import imgMobilidade from '../assets/img/lessons/mobilidade.jpg'
+import imgCore from '../assets/img/lessons/core.jpg'
+import imgSemana from '../assets/img/lessons/semana-treino.jpg'
+
 export const LESSONS = [
   {
     id: 'aquecimento',
+    img: imgAquecimento,
     title: 'Comece por aqui: aquecimento essencial',
     level: 'Iniciante',
     minutes: 8,
@@ -38,6 +46,7 @@ export const LESSONS = [
   },
   {
     id: 'hiit-iniciante',
+    img: imgHiit,
     title: 'HIIT para iniciantes: queime em 15 minutos',
     level: 'Iniciante',
     minutes: 15,
@@ -81,6 +90,7 @@ export const LESSONS = [
   },
   {
     id: 'forca-sem-equipamento',
+    img: imgForca,
     title: 'Força sem equipamentos: treino completo',
     level: 'Todos',
     minutes: 25,
@@ -122,6 +132,7 @@ export const LESSONS = [
   },
   {
     id: 'mobilidade',
+    img: imgMobilidade,
     title: 'Mobilidade diária: 10 minutos que mudam tudo',
     level: 'Todos',
     minutes: 10,
@@ -153,6 +164,7 @@ export const LESSONS = [
   },
   {
     id: 'core',
+    img: imgCore,
     title: 'Core forte: abdômen e lombar sem segredo',
     level: 'Intermediário',
     minutes: 12,
@@ -188,6 +200,7 @@ export const LESSONS = [
   },
   {
     id: 'semana-treino',
+    img: imgSemana,
     title: 'Monte sua semana de treinos',
     level: 'Todos',
     minutes: 6,

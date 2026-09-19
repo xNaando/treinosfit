@@ -1,8 +1,18 @@
 export const RECIPE_TAGS = ['Todas', 'Café da manhã', 'Almoço', 'Lanche', 'Jantar', 'Sobremesa', 'Marmita']
 
+import imgOats from '../assets/img/recipes/overnight-oats.jpg'
+import imgPanqueca from '../assets/img/recipes/panqueca-banana.jpg'
+import imgMarmita from '../assets/img/recipes/marmita-frango.jpg'
+import imgOmelete from '../assets/img/recipes/omelete-forno.jpg'
+import imgWrap from '../assets/img/recipes/wrap-atum.jpg'
+import imgSmoothie from '../assets/img/recipes/smoothie-verde.jpg'
+import imgQuinoa from '../assets/img/recipes/quinoa-grao.jpg'
+import imgBrownie from '../assets/img/recipes/brownie-fit.jpg'
+
 export const RECIPES = [
   {
     id: 'overnight-oats',
+    img: imgOats,
     title: 'Overnight oats de banana e pasta de amendoim',
     tag: 'Café da manhã',
     color: '#f59e0b',
@@ -32,6 +42,7 @@ export const RECIPES = [
   },
   {
     id: 'panqueca-banana',
+    img: imgPanqueca,
     title: 'Panqueca de banana com aveia',
     tag: 'Café da manhã',
     color: '#ec4899',
@@ -60,6 +71,7 @@ export const RECIPES = [
   },
   {
     id: 'marmita-frango',
+    img: imgMarmita,
     title: 'Marmita clássica: frango, batata-doce e brócolis',
     tag: 'Marmita',
     color: '#22c55e',
@@ -87,6 +99,7 @@ export const RECIPES = [
   },
   {
     id: 'omelete-forno',
+    img: imgOmelete,
     title: 'Omelete de forno com legumes',
     tag: 'Almoço',
     color: '#0ea5e9',
@@ -114,6 +127,7 @@ export const RECIPES = [
   },
   {
     id: 'wrap-atum',
+    img: imgWrap,
     title: 'Wrap integral de atum com cream cheese',
     tag: 'Lanche',
     color: '#8b5cf6',
@@ -140,6 +154,7 @@ export const RECIPES = [
   },
   {
     id: 'smoothie-verde',
+    img: imgSmoothie,
     title: 'Smoothie verde proteico',
     tag: 'Lanche',
     color: '#10b981',
@@ -166,6 +181,7 @@ export const RECIPES = [
   },
   {
     id: 'quinoa-grao',
+    img: imgQuinoa,
     title: 'Salada morna de quinoa e grão-de-bico',
     tag: 'Jantar',
     color: '#e879f9',
@@ -193,6 +209,7 @@ export const RECIPES = [
   },
   {
     id: 'brownie-fit',
+    img: imgBrownie,
     title: 'Brownie fit de batata-doce',
     tag: 'Sobremesa',
     color: '#ef4444',

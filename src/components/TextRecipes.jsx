@@ -36,6 +36,7 @@ export default function TextRecipes({ db, update }) {
             <span><Icon name="clock" size={15} /> {r.time}</span>
             <span><Icon name="user" size={15} /> {r.servings} porç{r.servings > 1 ? 'ões' : 'ão'}</span>
           </div>
+          <img className="reader-hero" src={r.img} alt="" />
           <div className="macros">
             <div className="macro" style={{ '--c': '#ef4444' }}><strong>{r.kcal}</strong><span>kcal</span></div>
             <div className="macro" style={{ '--c': '#8b5cf6' }}><strong>{r.protein}g</strong><span>proteína</span></div>
@@ -86,6 +87,7 @@ export default function TextRecipes({ db, update }) {
       <div className="recipe-grid">
         {(tag === 'Favoritas' ? RECIPES.filter((r) => favs.has(r.id)) : filtered).map((r) => (
           <button key={r.id} className="recipe-card card" style={{ '--c': r.color }} onClick={() => setOpen(r)}>
+            <img className="lesson-thumb" src={r.img} alt="" loading="lazy" />
             <div className="lesson-top">
               <span className="pl-tag" style={{ background: r.color }}>{r.tag}</span>
               <span

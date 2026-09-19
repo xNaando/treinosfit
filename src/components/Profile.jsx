@@ -1,14 +1,11 @@
-import { useRef } from 'react'
 import Avatar3D from './Avatar3D'
 import AvatarCustomizer from './AvatarCustomizer'
 import Icon from './Icon'
 import { ACTIVITY, currentWeight, HAIR_STYLES_M, HAIR_STYLES_F } from '../utils'
-import { exportDb, resetDb, defaultDb } from '../db'
 
 export default function Profile({ db, update }) {
   const p = db.profile
   const w = currentWeight(db)
-  const fileRef = useRef()
 
   const setP = (k, v) => update((d) => { d.profile[k] = v; return d })
   const setA = (a) => update((d) => { d.avatar = a; return d })
@@ -24,34 +21,11 @@ export default function Profile({ db, update }) {
     })
   }
 
-  function importBackup(e) {
-    const file = e.target.files?.[0]
-    if (!file) return
-    const reader = new FileReader()
-    reader.onload = () => {
-      try {
-        const data = JSON.parse(reader.result)
-        update(() => ({ ...structuredClone(defaultDb), ...data }))
-      } catch {
-        alert('Arquivo inválido — não consegui importar o backup.')
-      }
-    }
-    reader.readAsText(file)
-    e.target.value = ''
-  }
-
-  function resetAll() {
-    if (confirm('Tem certeza? Isso apaga TODOS os seus dados do Treinos Fit neste navegador.')) {
-      resetDb()
-      location.reload()
-    }
-  }
-
   return (
     <div className="page">
       <header className="page-head">
         <h1>Perfil e avatar</h1>
-        <p className="muted">Ajuste seus dados e deixe o boneco com a sua cara.</p>
+        <p className="muted">Edite suas informações e personalize seu avatar — ele muda de altura, peso e visual junto com você.</p>
       </header>
 
       <div className="prog-grid">
@@ -99,27 +73,6 @@ export default function Profile({ db, update }) {
             <Avatar3D heightCm={p.heightCm} weightKg={w} avatar={db.avatar} sex={p.sex} />
           </div>
           <AvatarCustomizer avatar={db.avatar} sex={p.sex} onChange={setA} />
-        </div>
-      </div>
-
-      <div className="card">
-        <div className="card-head"><h3><Icon name="download" size={18} /> Seus dados</h3></div>
-        <p className="muted">
-          Tudo fica salvo no seu navegador (banco de dados local). Sobrevive a F5, mas se limpar os dados do site, perde tudo —
-          por isso vale exportar um backup de vez em quando.
-        </p>
-        <div className="row-gap">
-          <button className="btn ghost sm" onClick={() => exportDb(db)}>
-            <Icon name="download" size={15} /> Exportar backup
-          </button>
-          <button className="btn ghost sm" onClick={() => fileRef.current?.click()}>
-            <Icon name="upload" size={15} /> Importar backup
-          </button>
-          <input ref={fileRef} type="file" accept="application/json" hidden onChange={importBackup} />
-          <span style={{ flex: 1 }} />
-          <button className="btn danger sm" onClick={resetAll}>
-            <Icon name="trash" size={15} /> Apagar tudo e recomeçar
-          </button>
         </div>
       </div>
     </div>

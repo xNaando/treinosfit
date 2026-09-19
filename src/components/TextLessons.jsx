@@ -34,6 +34,7 @@ export default function TextLessons({ db, update }) {
               {done.has(l.id) ? '✓ Concluída' : 'Marcar como concluída'}
             </button>
           </div>
+          <img className="reader-hero" src={l.img} alt="" />
           <p className="reader-intro">{l.intro}</p>
           {l.sections.map((s, i) => (
             <section key={i}>
@@ -70,6 +71,7 @@ export default function TextLessons({ db, update }) {
       <div className="lesson-grid">
         {LESSONS.map((l) => (
           <button key={l.id} className="lesson-card card" style={{ '--c': l.color }} onClick={() => setOpen(l)}>
+            <img className="lesson-thumb" src={l.img} alt="" loading="lazy" />
             <div className="lesson-top">
               <span className="pl-tag" style={{ background: l.color }}>{l.tag}</span>
               {done.has(l.id) && <span className="done-badge"><Icon name="check" size={13} /></span>}

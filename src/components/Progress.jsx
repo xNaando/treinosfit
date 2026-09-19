@@ -75,7 +75,7 @@ export default function Progress({ db, update }) {
     <div className="page">
       <header className="page-head">
         <h1>Progresso</h1>
-        <p className="muted">Registre suas pesagens, acompanhe os gráficos e veja seu avatar evoluir com você.</p>
+        <p className="muted">Anote seu peso, defina metas e acompanhe sua evolução nos gráficos.</p>
       </header>
 
       <div className="prog-grid">
@@ -163,13 +163,13 @@ export default function Progress({ db, update }) {
           )}
 
           <div className="evo-box">
-            <h4><Icon name="refresh" size={15} /> Linha do tempo do avatar</h4>
+            <h4>Sua linha do tempo</h4>
             {sorted.length < 2 ? (
-              <p className="muted">Registre pelo menos 2 pesagens para ver sua evolução no avatar.</p>
+              <p className="muted">Sua linha do tempo aparece depois da segunda pesagem.</p>
             ) : (
               <>
                 <div className="evo-avatar">
-                  <Avatar3D heightCm={p.heightCm} weightKg={evoWeight} avatar={db.avatar} sex={p.sex} interactive={false} />
+                  <Avatar3D heightCm={p.heightCm} weightKg={evoWeight} avatar={db.avatar} sex={p.sex} />
                 </div>
                 <input
                   type="range"

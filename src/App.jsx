@@ -7,6 +7,7 @@ import TextLessons from './components/TextLessons'
 import TextRecipes from './components/TextRecipes'
 import Progress from './components/Progress'
 import Profile from './components/Profile'
+import Donate from './components/Donate'
 import AvatarGallery from './components/AvatarGallery'
 import Icon from './components/Icon'
 import { LESSON_PLAYLISTS, RECIPE_PLAYLISTS } from './data/playlists'
@@ -19,6 +20,7 @@ const NAV = [
   { id: 'receitas-texto', label: 'Receitas em texto', icon: 'heart' },
   { id: 'progresso', label: 'Progresso', icon: 'chart' },
   { id: 'perfil', label: 'Perfil', icon: 'user' },
+  { id: 'apoiar', label: 'Apoiar', icon: 'heart' },
 ]
 
 export default function App() {
@@ -83,6 +85,7 @@ export default function App() {
         {tab === 'receitas-texto' && <TextRecipes db={db} update={update} />}
         {tab === 'progresso' && <Progress db={db} update={update} />}
         {tab === 'perfil' && <Profile db={db} update={update} />}
+        {tab === 'apoiar' && <Donate />}
       </main>
 
       <nav className="bottomnav">

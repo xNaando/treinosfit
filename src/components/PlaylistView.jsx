@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Icon from './Icon'
 import { fetchItemMeta, fetchPlaylistVideos, videoEmbedUrl } from '../youtube'
 
@@ -9,6 +9,12 @@ export default function PlaylistView({ item, onBack, accent = '#8b5cf6' }) {
   const [videos, setVideos] = useState(null) // null = carregando
   const [error, setError] = useState('')
   const [selected, setSelected] = useState(0)
+  const playerRef = useRef(null)
+
+  function goTo(i) {
+    setSelected(i)
+    playerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+  }
 
   const isPlaylist = item.kind === 'playlist'
 
@@ -85,7 +91,7 @@ export default function PlaylistView({ item, onBack, accent = '#8b5cf6' }) {
       )}
 
       {current && (
-        <div className="player-wrap card">
+        <div className="player-wrap card" ref={playerRef}>
           <div className="player-frame">
             <iframe
               src={videoEmbedUrl(current.id)}
@@ -94,6 +100,17 @@ export default function PlaylistView({ item, onBack, accent = '#8b5cf6' }) {
               allowFullScreen
             />
           </div>
+          {videos.length > 1 && (
+            <div className="yt-nav">
+              <button className="btn ghost sm" disabled={selected === 0} onClick={() => goTo(selected - 1)}>
+                <Icon name="arrow-left" size={15} /> Anterior
+              </button>
+              <span className="yt-nav-pos">{selected + 1} / {videos.length}</span>
+              <button className="btn ghost sm" disabled={selected === videos.length - 1} onClick={() => goTo(selected + 1)}>
+                Próximo <Icon name="chevron" size={15} />
+              </button>
+            </div>
+          )}
           <div className="player-info">
             <h3>{current.title}</h3>
             {current.description && <p className="muted">{current.description}</p>}
@@ -108,7 +125,7 @@ export default function PlaylistView({ item, onBack, accent = '#8b5cf6' }) {
               key={v.id}
               className={`yt-item card ${i === selected ? 'active' : ''}`}
               style={{ '--c': accent }}
-              onClick={() => setSelected(i)}
+              onClick={() => goTo(i)}
             >
               <span className="yt-num">{i + 1}</span>
               <img className="yt-thumb" src={v.thumb} alt="" loading="lazy" />
