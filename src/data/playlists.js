@@ -1,0 +1,112 @@
+// Playlists públicas do YouTube embutidas no app.
+// Você também pode adicionar as suas pela interface.
+
+export const LESSON_PLAYLISTS = [
+  {
+    id: 'PLui6Eyny-UzwxbWCWDbTzEwsZnnROBTIL',
+    kind: 'playlist',
+    title: '30 Dias de Yoga',
+    channel: 'Yoga with Adriene',
+    tag: 'Yoga',
+    color: '#8b5cf6',
+  },
+  {
+    id: 'PLui6Eyny-UzzFFfpiil94CUrWKVMaqmkm',
+    kind: 'playlist',
+    title: 'HOME — Jornada de Yoga (30 dias)',
+    channel: 'Yoga with Adriene',
+    tag: 'Yoga',
+    color: '#a855f7',
+  },
+  {
+    id: 'PL9_PQByTLLdVG82TrNAYl0MizT-MUmNbI',
+    kind: 'playlist',
+    title: 'Treinos Pamela Reif',
+    channel: 'Pamela Reif',
+    tag: 'HIIT',
+    color: '#ec4899',
+  },
+  {
+    id: 'PLYg_dfUZpKCIZg5nI82kV3LqjDBO78SBU',
+    kind: 'playlist',
+    title: 'Workouts',
+    channel: 'Chloe Ting',
+    tag: 'Em casa',
+    color: '#f59e0b',
+  },
+  {
+    id: 'PLyyiYAcIyZzFU5Kl93LwFh51W_M3PiXp8',
+    kind: 'playlist',
+    title: 'Workout',
+    channel: 'growingannanas',
+    tag: 'HIIT',
+    color: '#ef4444',
+  },
+  {
+    id: 'PLGj6tJC_x-779KVmRUJ-ymlZhcEheaYTP',
+    kind: 'playlist',
+    title: '2 Semanas de Abs & Pernas',
+    channel: 'Emi Wong',
+    tag: 'Desafio',
+    color: '#0ea5e9',
+  },
+  {
+    id: 'PLEkRYDcpWohyGXyg3tozA5I6glhPcM0mD',
+    kind: 'playlist',
+    title: 'Treinos com Equipamento',
+    channel: 'MadFit',
+    tag: 'Halteres',
+    color: '#22c55e',
+  },
+  {
+    id: 'PLXveHlnlr0uR-4l1gRHuX8GLgTi5sfqZN',
+    kind: 'playlist',
+    title: 'Dance HIIT Workouts',
+    channel: 'emkfit',
+    tag: 'Dança',
+    color: '#e879f9',
+  },
+  {
+    id: 'PL-apn2WtETFj4ZXxIs89xpBk-P86K4SSG',
+    kind: 'playlist',
+    title: 'Treinos de 15 minutos',
+    channel: 'Caroline Girvan',
+    tag: 'Força',
+    color: '#14b8a6',
+  },
+]
+
+export const RECIPE_PLAYLISTS = [
+  {
+    id: 'PLm5V5aj1twjx3gKBmlwzfC3wbFeipRkTl',
+    kind: 'playlist',
+    title: 'Cozinha Encantada',
+    channel: 'Tânia Gori',
+    tag: 'Caseiras',
+    color: '#f59e0b',
+  },
+  {
+    id: 'PLMO4e_FzXX12Obs7NZhqe52CEoYVNAe5W',
+    kind: 'playlist',
+    title: 'Jacques Pépin Recipes',
+    channel: 'KQED',
+    tag: 'Clássicas',
+    color: '#ef4444',
+  },
+  {
+    id: 'PLg0l3Fts-7I1H2Ygkd6H50O0ZPPL-36Ua',
+    kind: 'playlist',
+    title: 'Cook With Love Recipes',
+    channel: 'Cook With Love',
+    tag: 'Variadas',
+    color: '#22c55e',
+  },
+  {
+    id: 'PLX4EA_VGfj6aQHW1q9pgxNVlA-MA9C0tD',
+    kind: 'playlist',
+    title: 'Slow Cooker Recipes',
+    channel: 'Ninja Foodi',
+    tag: 'Práticas',
+    color: '#0ea5e9',
+  },
+]
