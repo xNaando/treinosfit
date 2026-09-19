@@ -169,7 +169,7 @@ export default function Progress({ db, update }) {
             ) : (
               <>
                 <div className="evo-avatar">
-                  <Avatar3D heightCm={p.heightCm} weightKg={evoWeight} avatar={db.avatar} interactive={false} />
+                  <Avatar3D heightCm={p.heightCm} weightKg={evoWeight} avatar={db.avatar} sex={p.sex} interactive={false} />
                 </div>
                 <input
                   type="range"

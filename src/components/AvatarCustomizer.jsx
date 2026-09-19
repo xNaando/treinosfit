@@ -1,5 +1,5 @@
 import Icon from './Icon'
-import { SKIN_COLORS, HAIR_COLORS, HAIR_STYLES, SHIRT_COLORS } from '../utils'
+import { SKIN_COLORS, HAIR_COLORS, HAIR_STYLES_M, HAIR_STYLES_F, SHIRT_COLORS } from '../utils'
 
 function Swatches({ colors, value, onChange }) {
   return (
@@ -19,8 +19,14 @@ function Swatches({ colors, value, onChange }) {
 }
 
 // Painel de customização do avatar — usado no onboarding e no perfil
-export default function AvatarCustomizer({ avatar, onChange }) {
+export default function AvatarCustomizer({ avatar, sex = 'M', onChange }) {
   const set = (k, v) => onChange({ ...avatar, [k]: v })
+
+  let styles = sex === 'F' ? HAIR_STYLES_F : HAIR_STYLES_M
+  // se o estilo salvo não existe para este sexo, mantém como opção extra
+  if (!styles.some((s) => s.id === avatar.hairStyle)) {
+    styles = [{ id: avatar.hairStyle, label: 'Atual' }, ...styles]
+  }
 
   return (
     <div className="customizer">
@@ -30,9 +36,9 @@ export default function AvatarCustomizer({ avatar, onChange }) {
       </div>
 
       <div className="field">
-        <label><Icon name="sparkles" size={15} /> Estilo do cabelo</label>
+        <label><Icon name="sparkles" size={15} /> Penteado {sex === 'F' ? '(feminino)' : '(masculino)'}</label>
         <div className="hair-grid">
-          {HAIR_STYLES.map((h) => (
+          {styles.map((h) => (
             <button
               key={h.id}
               type="button"

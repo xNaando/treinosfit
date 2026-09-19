@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Avatar3D from './Avatar3D'
 import AvatarCustomizer from './AvatarCustomizer'
 import Icon from './Icon'
-import { todayStr } from '../utils'
+import { todayStr, HAIR_STYLES_M, HAIR_STYLES_F } from '../utils'
 
 const STEPS = ['Você', 'Medidas', 'Avatar', 'Meta']
 
@@ -17,6 +17,12 @@ export default function Onboarding({ onDone }) {
   const [targetKg, setTargetKg] = useState('')
 
   const canNext = step === 0 ? name.trim().length >= 2 : true
+
+  function changeSex(s) {
+    setSex(s)
+    const list = s === 'F' ? HAIR_STYLES_F : HAIR_STYLES_M
+    setAvatar((a) => (list.some((h) => h.id === a.hairStyle) ? a : { ...a, hairStyle: s === 'F' ? 'longo' : 'curto' }))
+  }
 
   function finish() {
     onDone((db) => {
@@ -63,8 +69,8 @@ export default function Onboarding({ onDone }) {
               <div className="field">
                 <label>Sexo biológico</label>
                 <div className="seg">
-                  <button className={sex === 'M' ? 'active' : ''} onClick={() => setSex('M')}>Masculino</button>
-                  <button className={sex === 'F' ? 'active' : ''} onClick={() => setSex('F')}>Feminino</button>
+                  <button className={sex === 'M' ? 'active' : ''} onClick={() => changeSex('M')}>Masculino</button>
+                  <button className={sex === 'F' ? 'active' : ''} onClick={() => changeSex('F')}>Feminino</button>
                 </div>
               </div>
               <div className="field">
@@ -95,7 +101,7 @@ export default function Onboarding({ onDone }) {
           <div className="ostep-body">
             <h2>Monte seu avatar</h2>
             <p className="muted">Arraste o boneco para girar. Deixe ele com a sua cara!</p>
-            <AvatarCustomizer avatar={avatar} onChange={setAvatar} />
+            <AvatarCustomizer avatar={avatar} sex={sex} onChange={setAvatar} />
           </div>
         )}
 
@@ -133,7 +139,7 @@ export default function Onboarding({ onDone }) {
       </div>
 
       <div className="onboard-avatar">
-        <Avatar3D heightCm={heightCm} weightKg={weightKg} avatar={avatar} />
+        <Avatar3D heightCm={heightCm} weightKg={weightKg} avatar={avatar} sex={sex} />
       </div>
     </div>
   )

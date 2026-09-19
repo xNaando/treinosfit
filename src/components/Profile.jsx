@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import Avatar3D from './Avatar3D'
 import AvatarCustomizer from './AvatarCustomizer'
 import Icon from './Icon'
-import { ACTIVITY, currentWeight } from '../utils'
+import { ACTIVITY, currentWeight, HAIR_STYLES_M, HAIR_STYLES_F } from '../utils'
 import { exportDb, resetDb, defaultDb } from '../db'
 
 export default function Profile({ db, update }) {
@@ -12,6 +12,17 @@ export default function Profile({ db, update }) {
 
   const setP = (k, v) => update((d) => { d.profile[k] = v; return d })
   const setA = (a) => update((d) => { d.avatar = a; return d })
+
+  function changeSex(s) {
+    update((d) => {
+      d.profile.sex = s
+      const list = s === 'F' ? HAIR_STYLES_F : HAIR_STYLES_M
+      if (!list.some((h) => h.id === d.avatar.hairStyle)) {
+        d.avatar.hairStyle = s === 'F' ? 'longo' : 'curto'
+      }
+      return d
+    })
+  }
 
   function importBackup(e) {
     const file = e.target.files?.[0]
@@ -64,8 +75,8 @@ export default function Profile({ db, update }) {
             <div className="field">
               <label>Sexo biológico</label>
               <div className="seg">
-                <button className={p.sex === 'M' ? 'active' : ''} onClick={() => setP('sex', 'M')}>M</button>
-                <button className={p.sex === 'F' ? 'active' : ''} onClick={() => setP('sex', 'F')}>F</button>
+                <button className={p.sex === 'M' ? 'active' : ''} onClick={() => changeSex('M')}>M</button>
+                <button className={p.sex === 'F' ? 'active' : ''} onClick={() => changeSex('F')}>F</button>
               </div>
             </div>
             <div className="field">
@@ -85,9 +96,9 @@ export default function Profile({ db, update }) {
         <div className="card avatar-panel">
           <div className="card-head"><h3><Icon name="sparkles" size={18} /> Seu avatar</h3></div>
           <div className="profile-avatar">
-            <Avatar3D heightCm={p.heightCm} weightKg={w} avatar={db.avatar} />
+            <Avatar3D heightCm={p.heightCm} weightKg={w} avatar={db.avatar} sex={p.sex} />
           </div>
-          <AvatarCustomizer avatar={db.avatar} onChange={setA} />
+          <AvatarCustomizer avatar={db.avatar} sex={p.sex} onChange={setA} />
         </div>
       </div>
 

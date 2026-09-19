@@ -84,15 +84,24 @@ export const HAIR_COLORS = [
   '#d1d1d1', '#7c3aed', '#ec4899', '#38bdf8',
 ]
 
-export const HAIR_STYLES = [
+export const HAIR_STYLES_M = [
   { id: 'careca', label: 'Careca' },
   { id: 'raspado', label: 'Raspado' },
   { id: 'curto', label: 'Curto' },
   { id: 'topete', label: 'Topete' },
   { id: 'moicano', label: 'Moicano' },
   { id: 'cacheado', label: 'Cacheado' },
+  { id: 'bone', label: 'Boné' },
+]
+
+export const HAIR_STYLES_F = [
+  { id: 'bob', label: 'Bob / Chanel' },
   { id: 'longo', label: 'Longo' },
+  { id: 'rabo', label: 'Rabo de cavalo' },
   { id: 'coque', label: 'Coque' },
+  { id: 'chiquinhas', label: 'Maria-chiquinha' },
+  { id: 'cacheada', label: 'Cacheada' },
+  { id: 'bone', label: 'Boné' },
 ]
 
 export const SHIRT_COLORS = [

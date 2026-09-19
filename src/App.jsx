@@ -7,6 +7,7 @@ import TextLessons from './components/TextLessons'
 import TextRecipes from './components/TextRecipes'
 import Progress from './components/Progress'
 import Profile from './components/Profile'
+import AvatarGallery from './components/AvatarGallery'
 import Icon from './components/Icon'
 import { LESSON_PLAYLISTS, RECIPE_PLAYLISTS } from './data/playlists'
 
@@ -23,6 +24,11 @@ const NAV = [
 export default function App() {
   const [db, update] = useDb()
   const [tab, setTab] = useState('inicio')
+
+  // galeria de desenvolvimento: ?dev=avatars
+  if (new URLSearchParams(window.location.search).get('dev') === 'avatars') {
+    return <AvatarGallery />
+  }
 
   if (!db.profile) {
     return <Onboarding onDone={update} />

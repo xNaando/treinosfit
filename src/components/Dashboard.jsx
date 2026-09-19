@@ -78,7 +78,7 @@ export default function Dashboard({ db, update, go }) {
           </div>
         </div>
         <div className="dash-avatar">
-          <Avatar3D heightCm={p.heightCm} weightKg={w} avatar={db.avatar} />
+          <Avatar3D heightCm={p.heightCm} weightKg={w} avatar={db.avatar} sex={p.sex} />
         </div>
       </div>
 
